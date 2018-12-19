@@ -8,9 +8,10 @@
         <input type="text" name="title" v-model="title">
       </div>
 
-      <div class="" v-for="(attribute, index) in attributes" :key="index" >
+      <div class="field" v-for="(attribute, index) in attributes" :key="index" >
         <label for="attribute">Attribute:</label>
         <input type="text" name="attribute" v-model="attributes[index]">
+        <i class="material-icons delete" @click="deleteAttrb(attribute)">delete</i>
       </div>
 
       <!-- event modifier keydown event -->
@@ -79,6 +80,11 @@ export default {
       } else {
         this.feedback = 'Enter a value'
       }
+    },
+    deleteAttrb(attrb){
+      this.attributes = this.attributes.filter(attribute => {
+        return attribute != attrb
+      })
     }
   }
 }
@@ -96,7 +102,17 @@ export default {
     margin: 20px auto;
   }
 
-  .addd-playlist .field{
+  .add-playlist .field{
     margin: 20px auto;
+    position: relative;
+  }
+
+  .add-playlist .delete {
+    position: absolute;
+    right: 0;
+    bottom: 16px;
+    color: #aaa;
+    font-size: 1.4em;
+    cursor: pointer;
   }
 </style>

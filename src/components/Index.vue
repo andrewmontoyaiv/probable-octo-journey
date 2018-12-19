@@ -2,6 +2,9 @@
   <div class="index container">
     <div class="card" v-for="playlist in playlists" :key="playlist.id">
       <div class="card-content">
+        <router-link :to="{ name: 'EditPlaylist', params: {playlist_slug: playlist.slug} }">
+          <i class="material-icons edit">edit</i>
+        </router-link>
         <i class="material-icons delete" @click="deletePlaylist(playlist.id)">delete</i>
         <h2 class="indigo-text">{{ playlist.title }}</h2>
         <ul class="attributes">
@@ -82,5 +85,13 @@ export default {
     cursor: pointer;
     color: #aaa;
     font-size: 1.4em;
+  }
+  .index .edit {
+    position: absolute;
+    cursor: pointer;
+    color: #aaa;
+    top: 4px;
+    left: 4px;
+
   }
 </style>
