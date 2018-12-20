@@ -10,8 +10,8 @@
     </div>
 
 
-    <div class="index-viewport container">
-      <div class="card invisible" v-for="playlist in playlists" :key="playlist.id">
+    <div class="index-viewport container row">
+      <div class="card invisible col l3 m4 s12" v-for="playlist in playlists" :key="playlist.id">
 
         <div class="card" >
           <div class="card-image">
@@ -102,6 +102,7 @@ export default {
     margin-top: -10px;
   }
 
+
   .card-content{
     background-color: #E5E5E5;
   }
@@ -141,12 +142,17 @@ export default {
     font-size: 2em;
   }
 
-  .index-viewport{
+  /* .index-viewport{
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-gap: 30px;
     margin-top: 60px;
+  } */
+
+  .index-viewport{
+    margin-top: 10px;
   }
+
   .index-viewport h2{
     font-size: 1.8em;
     text-align: center;

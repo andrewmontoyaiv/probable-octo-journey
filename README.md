@@ -2,7 +2,7 @@
 
 > A Vue.js project
 > Currently outputs youtube queries based on the tags specified in 'create playlist'
-> Published to: [spotifyplaylistdesigner.com](spotifyplaylistdesigner.com) & [spotify-playlist-designer.firebaseapp.com](spotify-playlist-designer.firebaseapp.com)
+> Published to: [spotifyplaylistdesigner.com](https://spotifyplaylistdesigner.com) & [spotify-playlist-designer.firebaseapp.com](https://spotify-playlist-designer.firebaseapp.com)
 
 ## TODO
 

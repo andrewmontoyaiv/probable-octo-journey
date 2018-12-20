@@ -6,7 +6,7 @@
       </span>
     </p>
     <p class="center-align">Powered by <a href="https://firebase.google.com/">Firebase</a> & <a href="https://vuejs.org/">Vue.js</a>
-    - <a href="#">Source Code</a> </p>
+    - <a href="https://github.com/andrewmontoyaiv/spotify-playlist-designer">Source Code</a> </p>
   </div>
 </template>
 

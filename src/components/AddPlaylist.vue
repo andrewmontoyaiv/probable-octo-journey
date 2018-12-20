@@ -64,7 +64,7 @@ export default {
           }
         })
 
-        if(flag){
+        if(flag && this.attributes.length){
           this.feedback = null
           // create slug from slugify
           this.slug = slugify(this.title, {
