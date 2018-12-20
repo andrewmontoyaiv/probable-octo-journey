@@ -16,6 +16,7 @@
 
       <!-- event modifier keydown event -->
       <div class="field add-attributes">
+        <i class="material-icons add" @click="addAttrb">add</i>
         <label for="add-attributes">Add Playlist Attributes:</label>
         <!-- set action and prevent default behavior (losing focus) -->
         <input type="text" name="add-attributes" @keydown.tab.prevent="addAttrb" v-model="attrb">
@@ -44,37 +45,48 @@ export default {
   },
   methods: {
     addAttrb(){
-      if(this.attrb){
-        this.playlist.attributes.push(this.attrb)
-        this.attrb = null
-        this.feedback = null
-      } else {
-        this.feedback = 'Enter a value'
-      }
+      this.playlist.attributes.push(this.attrb)
+      this.attrb = null
+      this.feedback = null
     },
     editPlaylist(){
       if(this.playlist.title){
-        this.feedback = null
-        // create slug from slugify
-        this.playlist.slug = slugify(this.playlist.title, {
-          replacement: '-',
-          remove: /[$*+~.()'"!\-:@]/g,
-          lower: true //lowercase
+
+        let flag = true;
+        this.playlist.attributes.forEach(attribute => {
+          console.log(attribute)
+          if(attribute == null || attribute == ''){
+            // TODO: signal event to change text style
+
+            flag = false;
+          }
         })
 
-        database.collection('playlists').doc(this.playlist.id).update({
-          title: this.playlist.title,
-          attributes: this.playlist.attributes,
-          slug: this.playlist.slug
-        })
-        .then(() => {
-          //redirect
-          this.$router.push({name: 'Index'})
-        }).catch(err => {
-          console.log(err)
-        })
+        if(flag){
+          this.feedback = null
+          // create slug from slugify
+          this.playlist.slug = slugify(this.playlist.title, {
+            replacement: '-',
+            remove: /[$*+~.()'"!\-:@]/g,
+            lower: true //lowercase
+          })
+
+          database.collection('playlists').doc(this.playlist.id).update({
+            title: this.playlist.title,
+            attributes: this.playlist.attributes,
+            slug: this.playlist.slug
+          })
+          .then(() => {
+            //redirect
+            this.$router.push({name: 'Index'})
+          }).catch(err => {
+            console.log(err)
+          })
+        } else{
+          this.feedback = "Attribute(s) Is Empty"
+        }
       }else {
-        this.feedback = "Enter A Playlist Title"
+        this.feedback = "Playlist Title is Empty"
       }
     },
     deleteAttrb(attrb){
@@ -120,5 +132,15 @@ export default {
   color: #aaa;
   font-size: 1.4em;
   cursor: pointer;
+}
+
+.edit-playlist .add-attributes .add{
+  position: absolute;
+  color: #aaa;
+  right: 0px;
+  top: 35px;
+  font-size: 1.4em;
+  cursor: pointer;
+
 }
 </style>

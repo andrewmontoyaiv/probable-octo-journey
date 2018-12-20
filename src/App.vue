@@ -1,21 +1,58 @@
 <template>
   <div id="app">
-    <Navbar />
-    <router-view/>
+    <Navbar id="header" />
+    <router-view id="main" />
+    <Footer id="footer" />
   </div>
 </template>
 
 <script>
 import Navbar from '@/components/Navbar'
+import Footer from '@/components/Footer'
 export default {
   name: 'App',
   components: {
-    Navbar
+    Navbar,
+    Footer
   }
 }
 
 </script>
 
 <style>
+  html, body {
+   margin:0;
+   padding:0;
+   height:100%;
+  }
+
+  #app{
+    min-height: 100%;
+    position: relative;
+  }
+
+  #footer{
+    height: 30px;
+    left: 0;
+    right: 0;
+    margin-bottom: 50px;
+    position: absolute;
+    bottom: 15px;
+  }
+
+  #main {
+    height: 90%;
+    padding-bottom: 100px;
+  }
+
+   a.router-link-exact-active {
+    text-decoration: underline;
+    color: #2BE760;
+  }
+
+  .DEBUG{
+    border-style: dashed;
+  }
+
 
 </style>

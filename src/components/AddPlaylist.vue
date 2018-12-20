@@ -8,6 +8,11 @@
         <input type="text" name="title" v-model="title">
       </div>
 
+      <div class="field">
+        <label for="artist">Created by: </label>
+        <input type="text" name="artist" v-model="user">
+      </div>
+
       <div class="field" v-for="(attribute, index) in attributes" :key="index" >
         <label for="attribute">Attribute:</label>
         <input type="text" name="attribute" v-model="attributes[index]">
@@ -17,6 +22,7 @@
       <!-- event modifier keydown event -->
       <div class="field add-attributes">
         <label for="add-attributes">Add Playlist Attributes:</label>
+        <i class="material-icons add" @click="addAttrb">add</i>
         <!-- set action and prevent default behavior (losing focus) -->
         <input type="text" name="add-attributes" @keydown.tab.prevent="addAttrb" v-model="attrb">
       </div>
@@ -37,49 +43,67 @@ export default {
   data() {
     return {
       title: null,
-      attrb: null,
+      user: null,
       attributes: [],
-      feedback: null,
-      slug: null
+      slug: null,
+      attrb: null,
+      feedback: null
     }
   },
   methods: {
     addPlaylist(){
-      if(this.title){
-        this.feedback = null
-        // create slug from slugify
-        this.slug = slugify(this.title, {
-          replacement: '-',
-          remove: /[$*+~.()'"!\-:@]/g,
-          lower: true //lowercase
-        })
-        console.log(this.slug)
-        console.log(this.attributes)
-        console.log(this.title)
+      if(this.title && this.user){
 
-        database.collection('playlists').add({
-          title: this.title,
-          attributes: this.attributes,
-          slug: this.slug
+        let flag = true;
+        this.attributes.forEach(attribute => {
+          console.log(attribute)
+          if(attribute == null || attribute == ''){
+            // TODO: signal event to change text style
+
+            flag = false;
+          }
         })
-        .then(() => {
-          //redirect
-          this.$router.push({name: 'Index'})
-        }).catch(err => {
-          console.log(err)
-        })
+
+        if(flag){
+          this.feedback = null
+          // create slug from slugify
+          this.slug = slugify(this.title, {
+            replacement: '-',
+            remove: /[$*+~.()'"!\-:@]/g,
+            lower: true //lowercase
+          })
+          console.log(this.slug)
+          console.log(this.attributes)
+          console.log(this.title)
+
+          database.collection('playlists').add({
+            title: this.title,
+            user: this.user,
+            attributes: this.attributes,
+            slug: this.slug
+          })
+          .then(() => {
+            //redirect
+            this.$router.push({name: 'Index'})
+          }).catch(err => {
+            console.log(err)
+          })
+          this.feedback = null
+        }
+        else{
+          this.feedback = "Attribute(s) Is Empty"
+        }
       }else {
-        this.feedback = "Enter A Playlist Title"
+        if(!this.title){
+          this.feedback = "Playlist Title Is Empty"
+        }else if (!this.user) {
+          this.feedback = "Created By Is Empty"
+        }
       }
     },
     addAttrb(){
-      if(this.attrb){
-        this.attributes.push(this.attrb)
-        this.attrb = null
-        this.feedback = null
-      } else {
-        this.feedback = 'Enter a value'
-      }
+      this.attributes.push(this.attrb)
+      this.attrb = null
     },
     deleteAttrb(attrb){
       this.attributes = this.attributes.filter(attribute => {
@@ -115,4 +139,24 @@ export default {
     font-size: 1.4em;
     cursor: pointer;
   }
+
+  .add-playlist .error{
+    color: red;
+  }
+
+  .add-playlist .add-attributes{
+    margin: 0, auto;
+  }
+
+  .add-playlist .add-attributes .add{
+    position: absolute;
+    color: #aaa;
+    right: 0px;
+    top: 35px;
+    font-size: 1.4em;
+    cursor: pointer;
+
+  }
+
+
 </style>

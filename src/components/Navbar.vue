@@ -1,15 +1,19 @@
 <template lang="html">
   <div class="navbar">
-    <nav class="nav-extended indigo darken-2">
-      <div class="nav-content">
+    <nav class="nav-extended darken-2">
+      <div class="nav-logo">
         <router-link :to="{ name: 'Index' }">
-          <span class="nav-title">Spotify Playlist Designer</span>
+          <a href="#"></a>
+          <img class="logo" src="@/assets/S-PLD_logo.png">
         </router-link>
-        <a href="#" class="btn-floating btn-large halfway-fab pink">
-          <router-link :to="{ name: 'AddPlaylist'}">
-            <i class="material-icons">add</i>
+      </div>
+      <div class="nav-content valign-wrapper">
+        <div class="center-block">
+          <router-link :to="{ name: 'Index' }">
+            Community Playlists
           </router-link>
-        </a>
+        </div>
+
       </div>
     </nav>
   </div>
@@ -28,6 +32,22 @@ export default {
 
 <style lang="css">
 .navbar nav{
+  height: 100px;
   padding: 0 20px;
+  background-color: #0F121D;
 }
+
+.navbar .nav-logo .logo{
+  margin-top: 10px;
+  width:200px; /* you can use % */
+  height: auto;
+}
+
+.navbar .nav-content {
+  font-family: 'Revalia', regular;
+  margin-top: -20px;
+}
+
+
+
 </style>
