@@ -51,6 +51,7 @@ export default {
     },
     editPlaylist(){
       if(this.playlist.title){
+        // TODO: check if playlist already exists for the user
 
         let flag = true;
         this.playlist.attributes.forEach(attribute => {
@@ -65,7 +66,7 @@ export default {
         if(flag){
           this.feedback = null
           // create slug from slugify
-          this.playlist.slug = slugify(this.playlist.title, {
+          this.playlist.slug = slugify(this.playlist.user + '/' + this.playlist.title, {
             replacement: '-',
             remove: /[$*+~.()'"!\-:@]/g,
             lower: true //lowercase

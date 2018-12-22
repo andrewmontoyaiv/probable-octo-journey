@@ -8,11 +8,6 @@
         <input type="text" name="title" v-model="title">
       </div>
 
-      <div class="field">
-        <label for="artist">Created by: </label>
-        <input type="text" name="artist" v-model="user">
-      </div>
-
       <div class="field" v-for="(attribute, index) in attributes" :key="index" >
         <label for="attribute">Attribute:</label>
         <input type="text" name="attribute" v-model="attributes[index]">
@@ -21,7 +16,7 @@
 
       <!-- event modifier keydown event -->
       <div class="field add-attributes">
-        <label for="add-attributes">Add Playlist Attributes:</label>
+        <label for="add-attributes">Add Playlist Attributes: (+ OR tab to save)</label>
         <i class="material-icons add" @click="addAttrb">add</i>
         <!-- set action and prevent default behavior (losing focus) -->
         <input type="text" name="add-attributes" @keydown.tab.prevent="addAttrb" v-model="attrb">
@@ -36,6 +31,7 @@
 </template>
 
 <script>
+import firebase from 'firebase'
 import database from '@/firebase/init'
 import slugify from 'slugify'
 export default {
@@ -52,7 +48,7 @@ export default {
   },
   methods: {
     addPlaylist(){
-      if(this.title && this.user){
+      if(this.title){
 
         let flag = true;
         this.attributes.forEach(attribute => {
@@ -67,7 +63,7 @@ export default {
         if(flag && this.attributes.length){
           this.feedback = null
           // create slug from slugify
-          this.slug = slugify(this.title, {
+          this.slug = slugify(this.user + '/' + this.title, {
             replacement: '-',
             remove: /[$*+~.()'"!\-:@]/g,
             lower: true //lowercase
@@ -76,18 +72,35 @@ export default {
           console.log(this.attributes)
           console.log(this.title)
 
-          database.collection('playlists').add({
-            title: this.title,
-            user: this.user,
-            attributes: this.attributes,
-            slug: this.slug
+          // query for user alias
+          let user = firebase.auth().currentUser
+
+          //find user record & Update
+          database.collection('users').where('user_id', '==', user.uid).get()
+          .then(snapshot => {
+            // callback func
+            snapshot.forEach((doc) => {
+              console.log(doc.id)
+              database.collection('users').doc(doc.id).get()
+              .then(doc => {
+                this.user = doc.alias
+              })
+            })
           })
-          .then(() => {
-            //redirect
-            this.$router.push({name: 'Index'})
-          }).catch(err => {
-            console.log(err)
-          })
+
+
+          // database.collection('playlists').add({
+          //   title: this.title,
+          //   user: this.user,
+          //   attributes: this.attributes,
+          //   slug: this.slug
+          // })
+          // .then(() => {
+          //   //redirect
+          //   this.$router.push({name: 'Index'})
+          // }).catch(err => {
+          //   console.log(err)
+          // })
           this.feedback = null
         }
         else{
@@ -115,6 +128,7 @@ export default {
 </script>
 
 <style lang="css">
+
   .add-playlist{
     margin-top: 60px;
     padding: 20px;

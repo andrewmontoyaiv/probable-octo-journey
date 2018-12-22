@@ -7,6 +7,7 @@
     </p>
     <p class="center-align">Powered by <a href="https://firebase.google.com/">Firebase</a> & <a href="https://vuejs.org/">Vue.js</a>
     - <a href="https://github.com/andrewmontoyaiv/spotify-playlist-designer">Source Code</a> </p>
+    <p class="center-align">(alpha build 0.4)</p>
   </div>
 </template>
 
