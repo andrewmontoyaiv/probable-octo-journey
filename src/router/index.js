@@ -19,7 +19,8 @@ export default new Router({
     {
       path: '/add-playlist',
       name: 'AddPlaylist',
-      component: AddPlaylist
+      component: AddPlaylist,
+      props: true
     },
     {
       path: '/edit-playlist/:playlist_slug',

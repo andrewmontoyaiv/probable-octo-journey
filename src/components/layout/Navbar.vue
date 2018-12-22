@@ -1,7 +1,7 @@
 <template lang="html">
     <nav class="navbar container-fluid">
 
-      <div class="row nav-top">
+      <div class="row">
           <div class="nav-logo left">
             <router-link :to="{ name: 'Index' }">
               <a href="#"></a>
@@ -9,15 +9,35 @@
             </router-link>
           </div>
 
+          <div class="nav-content hide-on-med-and-down container">
+            <ul class="right">
+              <li v-if="!user"> <router-link :to="{ name: 'Signup' }">Signup</router-link></li>
+              <li v-if="!user"> <router-link :to="{ name: 'Login'}">Login</router-link></li>
+
+              <!-- emulating a button -->
+
+              <li v-if="user"> <a href="#">{{ user.email }}</a> </li>
+              <li v-if="user"> <a @click="logout" href="#">Logout</a> </li>
+            </ul>
+          </div>
+
           <div class="nav-content container">
             <ul class="right">
-            <li v-if="!user"> <router-link :to="{ name: 'Signup' }">Signup</router-link></li>
-            <li v-if="!user"> <router-link :to="{ name: 'Login'}">Login</router-link></li>
-            <!-- emulating a button -->
-            <li v-if="user"> <a href="#">{{ user.email }}</a> </li>
-            <li v-if="user"> <a @click="logout" href="#">Logout</a> </li>
-          </ul>
+              <a @click="sidenav" data-target="slide-out" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+            </ul>
           </div>
+
+
+            <ul id="slide-out" class="nav-content sidenav container">
+              <li v-if="!user"> <router-link :to="{ name: 'Signup' }">Signup</router-link></li>
+              <li v-if="!user"> <router-link :to="{ name: 'Login'}">Login</router-link></li>
+              <li v-if="user"> <a href="#">{{ user.email }}</a> </li>
+              <li v-if="user"> <a @click="logout" href="#">Logout</a> </li>
+            </ul>
+
+
+
+
 
           <div class="nav-bottom">
             <div class="center">
@@ -52,8 +72,15 @@ export default {
         console.log();
         this.$router.push('Login');
       })
+    },
+    sidenav(){
+      let elems = this.$el.querySelectorAll('.sidenav');
+      let instances = M.Sidenav.init(elems, {
+        edge: 'right',
+      });
     }
   },
+
   created(){
     // let user = firebase.auth().currentUser
     // runs for every status change
@@ -73,6 +100,7 @@ export default {
   }
 
 }
+
 </script>
 
 <style lang="css">
@@ -91,14 +119,16 @@ nav .nav-bottom{
   top: 45px;
   left: 0;
   right: 0;
+}
 
-
+nav .sidenav-trigger{
+  cursor: pointer;
 }
 
 
 .nav-logo .logo{
   padding-top: 10px;
-  width:200px; /* you can use % */
+  width:160px; /* you can use % */
   height: auto;
 }
 

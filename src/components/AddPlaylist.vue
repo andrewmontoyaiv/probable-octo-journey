@@ -68,14 +68,15 @@ export default {
             remove: /[$*+~.()'"!\-:@]/g,
             lower: true //lowercase
           })
-          console.log(this.slug)
-          console.log(this.attributes)
-          console.log(this.title)
+          // console.log(this.slug)
+          // console.log(this.attributes)
+          // console.log(this.title)
 
           // query for user alias
           let user = firebase.auth().currentUser
 
           //find user record & Update
+          // TODO: refactor to use less bandwidth
           database.collection('users').where('user_id', '==', user.uid).get()
           .then(snapshot => {
             // callback func
@@ -83,24 +84,25 @@ export default {
               console.log(doc.id)
               database.collection('users').doc(doc.id).get()
               .then(doc => {
-                this.user = doc.alias
+                this.user = doc.data().alias
+                database.collection('playlists').add({
+                  title: this.title,
+                  user: this.user,
+                  attributes: this.attributes,
+                  slug: this.slug
+                })
+                .then(() => {
+                  //redirect
+                  this.$router.push({name: 'Index'})
+                }).catch(err => {
+                  console.log(err)
+                })
+
               })
             })
           })
 
-
-          // database.collection('playlists').add({
-          //   title: this.title,
-          //   user: this.user,
-          //   attributes: this.attributes,
-          //   slug: this.slug
-          // })
-          // .then(() => {
-          //   //redirect
-          //   this.$router.push({name: 'Index'})
-          // }).catch(err => {
-          //   console.log(err)
-          // })
+          console.log(this.user)
           this.feedback = null
         }
         else{
@@ -122,6 +124,9 @@ export default {
       this.attributes = this.attributes.filter(attribute => {
         return attribute != attrb
       })
+    },
+    created(){
+
     }
   }
 }
