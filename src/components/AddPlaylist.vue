@@ -49,7 +49,6 @@ export default {
   methods: {
     addPlaylist(){
       if(this.title){
-
         let flag = true;
         this.attributes.forEach(attribute => {
           console.log(attribute)
@@ -63,11 +62,7 @@ export default {
         if(flag && this.attributes.length){
           this.feedback = null
           // create slug from slugify
-          this.slug = slugify(this.user + '/' + this.title, {
-            replacement: '-',
-            remove: /[$*+~.()'"!\-:@]/g,
-            lower: true //lowercase
-          })
+
           // console.log(this.slug)
           // console.log(this.attributes)
           // console.log(this.title)
@@ -76,33 +71,58 @@ export default {
           let user = firebase.auth().currentUser
 
           //find user record & Update
-          // TODO: refactor to use less bandwidth
-          database.collection('users').where('user_id', '==', user.uid).get()
-          .then(snapshot => {
-            // callback func
-            snapshot.forEach((doc) => {
-              console.log(doc.id)
-              database.collection('users').doc(doc.id).get()
-              .then(doc => {
-                this.user = doc.data().alias
-                database.collection('playlists').add({
-                  title: this.title,
-                  user: this.user,
-                  attributes: this.attributes,
-                  slug: this.slug
-                })
-                .then(() => {
-                  //redirect
-                  this.$router.push({name: 'Index'})
-                }).catch(err => {
-                  console.log(err)
-                })
+          if(user){
+            database.collection('users').where('user_id', '==', user.uid).get()
+            .then(snapshot => {
 
+              // callback func
+              snapshot.forEach((doc) => {
+                database.collection('users').doc(doc.id).get()
+                .then(doc => {
+                  this.user = doc.data().alias;
+
+                  this.slug = slugify(doc.id + '/' + this.title, {
+                    replacement: '-',
+                    remove: /[$*+~.()'"!\-:@]/g,
+                    lower: true //lowercase
+                  })
+
+                  database.collection('playlists').add({
+                    title: this.title,
+                    user: this.user,
+                    attributes: this.attributes,
+                    slug: this.slug
+                  })
+                  .then(() => {
+                    //redirect
+                    this.$router.push({name: 'Index'})
+                  }).catch(err => {
+                    console.log(err)
+                  })
+
+                })
               })
             })
-          })
+          } else {
+            this.slug = slugify(this.title, {
+              replacement: '-',
+              remove: /[$*+~.()'"!\-:@]/g,
+              lower: true //lowercase
+            })
 
-          console.log(this.user)
+            database.collection('playlists').add({
+              title: this.title,
+              user: this.user,
+              attributes: this.attributes,
+              slug: this.slug
+            })
+            .then(() => {
+              //redirect
+              this.$router.push({name: 'Index'})
+            }).catch(err => {
+              console.log(err)
+            })
+          }
           this.feedback = null
         }
         else{
@@ -116,15 +136,18 @@ export default {
         }
       }
     },
+
     addAttrb(){
       this.attributes.push(this.attrb)
       this.attrb = null
     },
+
     deleteAttrb(attrb){
       this.attributes = this.attributes.filter(attribute => {
         return attribute != attrb
       })
     },
+
     created(){
 
     }
